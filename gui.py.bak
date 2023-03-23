@@ -1,0 +1,42 @@
+import pygame
+
+# Initializes pygame
+pygame.init()
+# Sets the screen size to 600x600
+screen = pygame.display.set_mode((1000, 1000))
+# Sets the window title to TTT-AI
+pygame.display.set_caption("TTT-AI")
+
+run = True
+ 
+scalar = 100
+
+# (x, y)
+mapList = [[[(400, 200), (400, 800)], [(600, 200), (600, 800)]], [[(200, 400), (800, 400)], [(200, 600), (800, 600)]]]
+
+for i in range(2):
+    for j in range(2):
+        for k in range(1):
+            pygame.draw.line(screen, "red", mapList[i][j][k], mapList[i][j][k+1])
+            print(mapList[i][j][k])
+            print(mapList[i][j][k+1])
+            print("\n") 
+
+
+# Main game loop
+while run:
+    # Loops through every event in the event queue
+    for event in pygame.event.get():
+        # Check if the event is of type QUIT
+        if(event.type == pygame.QUIT):
+            # If the event was of type QUIT, ends the main game loop
+            run = False
+
+        if(event.type == pygame.MOUSEBUTTONUP):
+            pos = pygame.mouse.get_pos()
+            isInside = False    
+
+        pygame.display.flip()
+# Deactivates pygame
+pygame.quit()
+
