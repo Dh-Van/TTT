@@ -16,15 +16,16 @@ screen.fill("black")
 board = np.array(["" for _ in range(3**2)]).reshape(3, 3)
 rectList = []
 
-base = Rectangle.centeredRect((500, 500), (500, 500), (0, 0)).getRect()
+base = Rectangle.centeredRect((500, 500), (500, 500), "X").getRect()
 
 pygame.draw.rect(screen, "red", rect = base)
 
 for x in range(330, 671, 170):
     for y in range(330, 671, 170):
-        rect = Rectangle.centeredRect((x, y), (160, 160), ((y//170) - 1, (x//170) - 1))
+        rect = Rectangle.centeredRect((x, y), (160, 160), "")
         rectList.append(rect)
         pygame.draw.rect(screen, "black", rect = rect.getRect())
+        board[x//170][y//170] = rect
 
 def drawX(center : Tuple[int, int]):
     pygame.draw.line(screen, "red", (center[0] - 60, center[1] - 60), (center[0] + 60, center[1] + 60), width=5)
@@ -32,10 +33,6 @@ def drawX(center : Tuple[int, int]):
 
 def drawO(center : Tuple[int, int]):
     pygame.draw.circle(screen, "red", center, 60, width=5)
-
-def checkBoard():
-    for row in board:
-        for column in row:
 
 run = True
 
@@ -52,16 +49,16 @@ while run:
             pos = pygame.mouse.get_pos()
             for r in rectList:
                 if r.getRect().collidepoint(pos):
-                    relPos = r.getRelPos()
-                    currBoard = board[relPos[0]][relPos[1]]
-                    if(event.button == 1 and currBoard == ""):
-                        board[relPos[0]][relPos[1]] = "X"
-                        drawX(r.getRect().center)
-                    elif(event.button == 3 and currBoard == ""):
-                        board[relPos[0]][relPos[1]] = "O"
-                        drawO(r.getRect().center)
-                
-                print(board)
+                    if(event.button == 1 and r.getShape() == ""):
+                        r.setShape("X")
+                    elif(event.button == 3 and r.getShape() == ""):
+                        r.setShape("O")
+
+            for r in rectList:
+                if(r.getShape() == "X"):
+                    drawX(r.getRect().center)
+                elif(r.getShape() == "O"):
+                    drawO(r.getRect().center)
 
         pygame.display.flip()
 # Deactivates pygame

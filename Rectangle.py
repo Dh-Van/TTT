@@ -6,12 +6,12 @@ class centeredRect:
 
     position = [0, 0]
     size = [0, 0]
-    shape = ""
+    relPos = [0, 0]
         
-    def __init__(self, position : Tuple[int, int], size : Tuple[int, int], shape : str):
+    def __init__(self, position : Tuple[int, int], size : Tuple[int, int], relPos : Tuple[int, int]):
         self.position = position
         self.size = size
-        self.shape = shape
+        self.relPos = relPos
 
     def getRect(self):
         rect = Rect(0, 0, 0, 0)
@@ -19,8 +19,5 @@ class centeredRect:
         rect.center = self.position
         return rect
 
-    def setShape(self, shape):
-        self.shape = shape
-
-    def getShape(self):
-        return self.shape
+    def getRelPos(self):
+        return self.relPos
