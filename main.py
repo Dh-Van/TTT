@@ -17,6 +17,13 @@ screen.fill(constants.BACKGROUND_COLOR)
 base = utils.get_centered_rect((500, 500), (500, 500))
 pygame.draw.rect(screen, constants.GRID_COLOR, rect=base)
 
+# reset = utils.get_centered_rect((500, 900), (100, 100))
+i_reset = pygame.image.load('reset.png')
+i_reset.convert()
+reset = i_reset.get_rect()
+reset.center = (500, 900)
+screen.blit(i_reset, reset)
+
 board = np.array([tile.Tile() for _ in range(3**2)]).reshape(3, 3)
 
 for x in range(330, 671, 170):
@@ -33,17 +40,20 @@ def drawX(center : Tuple[int, int]):
 def drawO(center : Tuple[int, int]):
     pygame.draw.circle(screen, constants.GRID_COLOR, center, 60, width= constants.PIECE_THICKNESS)
 
-def drawEnd(win):
+def drawEnd(score):
     end = pygame.Surface((500, 500), pygame.SRCALPHA)
     font = pygame.font.Font("LM.otf", 32)
     words = ""
 
-    if(win):
+    if(score == "W"):
         color = constants.WIN_COLOR
         words = "YOU WIN!"
+    elif(score == "L"):
+        color = constants.LOSE_COLOR
+        words = "YOU LOSE."
     else:
-        color = constants.LOOSE_COLOR
-        words = "YOU LOOSE."
+        color = constants.TIE_COLOR
+        words = "TIE"
 
     text = font.render(words, True, constants.GRID_COLOR)
     text_rect = text.get_rect()
@@ -74,18 +84,26 @@ def checkGame():
         result = tile1.get_magic_number() + tile2.get_magic_number() + tile3.get_magic_number()
     
         if(result == 15):
-            drawEnd(True)
-            return True
+            drawEnd("W")
+            return False
         if(result == 30):
-            drawEnd(False)
-            return True
+            drawEnd("L")
+            return False
 
+    counter = 0
+    for idx, tile in np.ndenumerate(board):
+        if(tile.get_shape() != "-"):
+            counter += 1
+    if(counter == 3**2):
+        drawEnd("T")
         return False
+
+    return True
     
 
 run = True
-play = True
 is_turn = True
+play = True
 
 # Main game loop
 while run:
@@ -96,15 +114,14 @@ while run:
             # If the event was of type QUIT, ends the main game loop
             run = False
 
-        if(play):
-            if (event.type == pygame.MOUSEBUTTONUP):
+        if (event.type == pygame.MOUSEBUTTONUP):
+            if(play):
                 pos = pygame.mouse.get_pos()
-                print(pos)
                 for idx, tile in np.ndenumerate(board):
                     relative_pos = tile.get_relative_pos()
                     rect = tile.get_rectangle()
                     shape = tile.get_shape()
-                    if rect.collidepoint(pos):
+                    if (rect.collidepoint(pos)):
                         if(is_turn and shape == "-"):
                             board[relative_pos[0]][relative_pos[1]].set_shape("X")
                             drawX(rect.center)
@@ -113,9 +130,8 @@ while run:
                             drawO(rect.center)
                         if(shape == "-"):
                             is_turn = not is_turn
-
-                play = not checkGame()
-                
+                play = checkGame()
+            
         pygame.display.flip()
 # Deactivates pygame
 pygame.quit()

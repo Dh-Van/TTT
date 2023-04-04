@@ -56,4 +56,4 @@ class Tile:
         return self.shape
 
     def get_magic_number(self):
-        return self.magicNumber * self.scalar
+        return self.magic_number * self.scalar
