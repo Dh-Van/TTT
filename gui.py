@@ -45,7 +45,7 @@ class GUI:
 
     def drawEnd(self, score):
         end = pygame.Surface((500, 500), pygame.SRCALPHA)
-        font = pygame.font.Font("LM.otf", 32)
+        font = pygame.font.Font("resources/LM.otf", 32)
         words = ""
 
         if(score == "W"):
@@ -65,8 +65,10 @@ class GUI:
         end.fill(color)
         self.screen.blit(end, (250, 250))
         self.screen.blit(text, text_rect)
+        pygame.display.flip()
 
-
+    def end(self):
+        return self.run
 
     def checkGame(self):
         checkList = []
@@ -115,7 +117,7 @@ class GUI:
             # Check if the event is of type QUIT
             if (event.type == pygame.QUIT):
                 # If the event was of type QUIT, ends the main game loop
-                return False
+                self.run = False
 
             if (event.type == pygame.MOUSEBUTTONUP):
                 if(self.play):
@@ -127,14 +129,13 @@ class GUI:
                         if (rect.collidepoint(pos)):
                             if(self.is_turn and shape == "-"):
                                 self.board[relative_pos[0]][relative_pos[1]].set_shape("X")
-                                print(self.board[relative_pos[0]][relative_pos[1]].get_shape())
                                 self.drawX(rect.center)
                             elif(not self.is_turn and shape == "-"):
                                 self.board[relative_pos[0]][relative_pos[1]].set_shape("O")
                                 self.drawO(rect.center)
                             if(shape == "-"):
                                 self.is_turn = not self.is_turn
-                    print(self.checkGame())
+                    return self.checkGame()
                 
             pygame.display.flip()
         return True

@@ -16,23 +16,23 @@ class Tile:
         self.rectangle = rectangle
         
         if (self.relative_pos == (0, 0)):
-            self.magicNumber = 8
+            self.magic_number = 8
         elif (self.relative_pos == (1, 0)):
-            self.magicNumber = 1
+            self.magic_number = 1
         elif (self.relative_pos == (2, 0)):
-            self.magicNumber = 6
+            self.magic_number = 6
         elif (self.relative_pos == (0, 1)):
-            self.magicNumber = 3
+            self.magic_number = 3
         elif (self.relative_pos == (1, 1)):
-            self.magicNumber = 5
+            self.magic_number = 5
         elif (self.relative_pos == (2, 1)):
-            self.magicNumber = 7
+            self.magic_number = 7
         elif (self.relative_pos == (0, 2)):
-            self.magicNumber = 4
+            self.magic_number = 4
         elif (self.relative_pos == (1, 2)):
-            self.magicNumber = 9
+            self.magic_number = 9
         elif (self.relative_pos == (2, 2)):
-            self.magicNumber = 2
+            self.magic_number = 2
 
     def set_shape(self, shape):
         self.shape = shape
