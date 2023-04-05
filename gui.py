@@ -1,29 +1,16 @@
-import constants, pygame, utils, tile
+import pygame, tile, utils, constants
 from typing import Tuple
 import numpy as np
 
-class GUI:
+class Gui:
 
-    board = None
     screen = None
-    run = True
-    is_turn = True
-    play = True
 
-    def __init__(self, board):
-        # Initializes pygame
-        pygame.init()
-        # Sets the screen size to 1000x1000
-        self.screen = pygame.display.set_mode((1000, 1000))
-        # Sets the window title to TTT-AI
-        pygame.display.set_caption("TTT-AI")
+    def __init__(self, screen):
+        self.screen = screen
 
-        self.board = board
 
-        self.screen.fill(constants.BACKGROUND_COLOR)
-        self.createGrid()
-
-    def createGrid(self):
+    def create_grid(self, board):
         base = utils.get_centered_rect((500, 500), (500, 500))
         pygame.draw.rect(self.screen, constants.GRID_COLOR, rect=base)
 
@@ -32,18 +19,18 @@ class GUI:
                 rect = utils.get_centered_rect((x, y), (160, 160))
                 pygame.draw.rect(self.screen, constants.BACKGROUND_COLOR, rect = rect)
                 t = tile.Tile((x , y), ((x//170) - 1, (y//170) - 1), "-", rect)
-                self.board[(x//170) - 1][(y//170) - 1] = t
+                board[(x//170) - 1][(y//170) - 1] = t
 
-        # print(self.board)
+        return board
     
-    def drawX(self, center : Tuple[int, int]):
+    def draw_x(self, center : Tuple[int, int]):
         pygame.draw.line(self.screen, constants.GRID_COLOR, (center[0] - 60, center[1] - 60), (center[0] + 60, center[1] + 60), width= constants.PIECE_THICKNESS)
         pygame.draw.line(self.screen, constants.GRID_COLOR, (center[0] + 60, center[1] - 60), (center[0] - 60, center[1] + 60), width= constants.PIECE_THICKNESS)
 
-    def drawO(self, center : Tuple[int, int]):
+    def draw_o(self, center : Tuple[int, int]):
         pygame.draw.circle(self.screen, constants.GRID_COLOR, center, 60, width= constants.PIECE_THICKNESS)
 
-    def drawEnd(self, score):
+    def draw_end(self, score):
         end = pygame.Surface((500, 500), pygame.SRCALPHA)
         font = pygame.font.Font("resources/LM.otf", 32)
         words = ""
@@ -67,77 +54,10 @@ class GUI:
         self.screen.blit(text, text_rect)
         pygame.display.flip()
 
-    def end(self):
-        return self.run
-
-    def checkGame(self):
-        checkList = []
-
-        print(self.board[0][0].get_magic_number())
-
-        for i in range(0, 3):
-            checkList.append([self.board[0][i], self.board[1][i], self.board[2][i]])
-
-        for i in range(0, 3):
-            checkList.append([self.board[i][0], self.board[i][1], self.board[i][2]])
-            
-        checkList.append([self.board[0][0], self.board[1][1], self.board[2][2]])
-        checkList.append([self.board[2][0], self.board[1][1], self.board[0][2]])
-
-        for check in checkList:
-            tile1 = check[0]
-            tile2 = check[1]
-            tile3 = check[2]
-        
-            result = tile1.get_magic_number() + tile2.get_magic_number() + tile3.get_magic_number()
-            # print(result)
-
-            if(result == 15):
-                self.drawEnd("W")
-                return False
-            if(result == 30):
-                self.drawEnd("L")
-                return False
-
-        counter = 0
-        for idx, tile in np.ndenumerate(self.board):
-            if(tile.get_shape() != "-"):
-                counter += 1
-        if(counter == 3**2):
-            self.drawEnd("T")
-            return False
-
-        return True
-        
-
-
-    def periodic(self):
-        # Loops through every event in the event queue
-        for event in pygame.event.get():
-            # Check if the event is of type QUIT
-            if (event.type == pygame.QUIT):
-                # If the event was of type QUIT, ends the main game loop
-                self.run = False
-
-            if (event.type == pygame.MOUSEBUTTONUP):
-                if(self.play):
-                    pos = pygame.mouse.get_pos()
-                    for idx, tile in np.ndenumerate(self.board):
-                        relative_pos = tile.get_relative_pos()
-                        rect = tile.get_rectangle()
-                        shape = tile.get_shape()
-                        if (rect.collidepoint(pos)):
-                            if(self.is_turn and shape == "-"):
-                                self.board[relative_pos[0]][relative_pos[1]].set_shape("X")
-                                self.drawX(rect.center)
-                            elif(not self.is_turn and shape == "-"):
-                                self.board[relative_pos[0]][relative_pos[1]].set_shape("O")
-                                self.drawO(rect.center)
-                            if(shape == "-"):
-                                self.is_turn = not self.is_turn
-                    return self.checkGame()
-                
-            pygame.display.flip()
-        return True
-
-        
+    def create_reset(self):
+        i_reset = pygame.image.load('resources/reset.png')
+        i_reset.convert()
+        reset = i_reset.get_rect()
+        reset.center = (500, 900)
+        self.screen.blit(i_reset, reset)
+        return reset
