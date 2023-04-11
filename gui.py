@@ -1,6 +1,8 @@
-import pygame, tile, utils, constants
+import pygame, tile, constants
 from typing import Tuple
 import numpy as np
+from pygame.locals import *
+
 
 class Gui:
 
@@ -9,14 +11,19 @@ class Gui:
     def __init__(self, screen):
         self.screen = screen
 
+    def get_centered_rect(self, position : Tuple[int, int], size : Tuple[int, int]):
+        rect = Rect(0, 0, 0, 0)
+        rect.size = size
+        rect.center = position
+        return rect
 
     def create_grid(self, board):
-        base = utils.get_centered_rect((500, 500), (500, 500))
+        base = self.get_centered_rect((500, 500), (500, 500))
         pygame.draw.rect(self.screen, constants.GRID_COLOR, rect=base)
 
         for x in range(330, 671, 170):
             for y in range(330, 671, 170):
-                rect = utils.get_centered_rect((x, y), (160, 160))
+                rect = self.get_centered_rect((x, y), (160, 160))
                 pygame.draw.rect(self.screen, constants.BACKGROUND_COLOR, rect = rect)
                 t = tile.Tile((x , y), ((x//170) - 1, (y//170) - 1), "-", rect)
                 board[(x//170) - 1][(y//170) - 1] = t
