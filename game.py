@@ -39,21 +39,21 @@ class Game:
         return self.run
     
     # Returns if the game should be running or not
-    def check_game(self):
+    def check_game(self, board):
         # Array that contains all combinations of 3 in a row in a 3x3 array
         check_list = []
 
         # Adds vertical links to the check list
         for i in range(0, 3):   
-            check_list.append([self.board[0][i], self.board[1][i], self.board[2][i]])
+            check_list.append([board[0][i], board[1][i], board[2][i]])
 
         # Adds horizontal links to the check list
         for i in range(0, 3):
-            check_list.append([self.board[i][0], self.board[i][1], self.board[i][2]])
+            check_list.append([board[i][0], board[i][1], board[i][2]])
             
         # Adds diagonal links to the check list
-        check_list.append([self.board[0][0], self.board[1][1], self.board[2][2]])
-        check_list.append([self.board[2][0], self.board[1][1], self.board[0][2]])
+        check_list.append([board[0][0], board[1][1], board[2][2]])
+        check_list.append([board[2][0], board[1][1], board[0][2]])
 
         # Loops through every link in the check list
         for check in check_list:
@@ -82,7 +82,7 @@ class Game:
         # If the code gets to this point, then either the game has not finished yet or it has resulted in a tie
         # Counter that keeps track of any filled sqaures in the grid
         counter = 0
-        for idx, tile in np.ndenumerate(self.board):
+        for idx, tile in np.ndenumerate(board):
             # If the tile either a X or O
             if(tile.get_shape() != "-"):
                 # Increments the counter
