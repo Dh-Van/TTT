@@ -148,11 +148,11 @@ class Game:
                             if(shape == "-"):
                                 self.x_turn = not self.x_turn
                     # If the game should not be running
-                    if(self.check_game(seld.board) == False):
+                    if(self.check_game(self.board) == False):
                         # Sets the play state of the game to False
                         self.play = False
                     # Returns if the game should be running or not
-                    return self.check_game(seld.board)
+                    return self.check_game(self.board)
             # Updates the pygame display
             pygame.display.flip()
         # Returns a defualt value of True
